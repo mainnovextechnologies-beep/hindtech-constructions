@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+# Replace with the production domain before launch
+Sitemap: https://REPLACE-WITH-YOUR-PRODUCTION-DOMAIN.com/sitemap.xml
