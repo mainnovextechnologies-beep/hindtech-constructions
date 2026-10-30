@@ -4,7 +4,7 @@ import {
   Layers3, MapPin, Menu, MessageCircle, Phone, Quote, ShieldCheck, Sparkles, X,
   Wrench, Building2, Ruler, Send, ExternalLink, Star, Images, Hammer
 } from 'lucide-react'
-import { BUSINESS, DEMO_MODE } from './config/business'
+import { BUSINESS } from './config/business'
 import { reviewConfig } from './config/reviews'
 
 const services = [
@@ -21,6 +21,10 @@ const work = [
   { file: 'work003.jpg', title: 'Slab Reinforcement', category: 'Civil Works', note: 'Reinforcement work photograph supplied by the company' },
   { file: 'work004.jpg', title: 'Foundation Reinforcement', category: 'Foundations', note: 'Foundation work photograph supplied by the company' },
   { file: 'work005.png', title: 'Exterior Design Inspiration', category: 'Exterior', note: 'Reference inspiration image; not represented as a completed company project' },
+  { file: 'work006.jpg', title: 'Building Under Construction', category: 'Civil Works', note: 'Building construction photograph supplied by the company' },
+  { file: 'work007.jpg', title: 'Interior Ceiling Finish', category: 'Interiors', note: 'Interior ceiling and lighting photograph supplied by the company' },
+  { file: 'work008.jpg', title: 'Interior Fit-Out', category: 'Interiors', note: 'Interior fit-out photograph supplied by the company' },
+  { file: 'work009.jpg', title: 'Building Exterior Progress', category: 'Foundations', note: 'Building exterior construction photograph supplied by the company' },
 ]
 type ModalKind = 'contact' | 'enquiry' | null
 
@@ -38,7 +42,11 @@ export default function App() {
   const openEnquiry = (service = 'General Project Enquiry') => {
     setIntent(service); setForm(p => ({ ...p, service })); setSubmitted(false); setFormError(''); setModal('enquiry')
   }
-  const contactAction = () => { if (DEMO_MODE) setModal('contact'); else window.location.href = `tel:${BUSINESS.phone}` }
+  const contactAction = () => {
+    const message = encodeURIComponent('Hello HINDTECH CONSTRUCTIONS, I would like to discuss a construction project. Please contact me.')
+    window.open(`https://wa.me/${BUSINESS.phone.replace(/\\D/g, '')}?text=${message}`, '_blank', 'noopener,noreferrer')
+  }
+  const callAction = () => { window.location.href = `tel:${BUSINESS.phone}` }
   const nav = (id: string) => { setMenuOpen(false); document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' }) }
   const submitForm = (e: React.FormEvent) => {
     e.preventDefault()
@@ -50,11 +58,21 @@ export default function App() {
       setFormError('Enter a valid 10-digit Indian mobile number.')
       return
     }
-    if (form.email && !/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(form.email)) {
+    if (form.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) {
       setFormError('Enter a valid email address or leave it blank.')
       return
     }
     setFormError('')
+    const message = [
+      'New project enquiry - HINDTECH CONSTRUCTIONS',
+      `Name: ${form.name}`,
+      `Mobile: ${form.phone}`,
+      `Email: ${form.email || 'Not provided'}`,
+      `Service: ${form.service || intent}`,
+      `Project location: ${form.location}`,
+      `Requirements: ${form.details || 'Not provided'}`,
+    ].join('\\n')
+    window.open(`https://wa.me/${BUSINESS.phone.replace(/\\D/g, '')}?text=${encodeURIComponent(message)}`, '_blank', 'noopener,noreferrer')
     setSubmitted(true)
   }
   return <div className="site-shell">
@@ -125,7 +143,7 @@ export default function App() {
         <div className="reviews-top"><div><div className="eyebrow"><span className="eyebrow-line"/> GOOGLE BUSINESS REVIEWS</div><h2>Word of mouth.<br/><em>Worth everything.</em></h2></div><div className="rating-summary"><div className="rating-number">{reviewConfig.rating.toFixed(1)}<span>/5</span></div><div className="stars" aria-label="Rating supplied by business: 4.9 out of 5">{[1,2,3,4,5].map(n=><Star key={n} size={17} fill="currentColor" strokeWidth={1}/>)}</div><p>Google rating · {reviewConfig.totalReviews} reviews<br/><small>Figures supplied by the business; verify before launch.</small></p><a className="button button-dark" href={BUSINESS.googleReviewsUrl} target="_blank" rel="noreferrer">Read Google Reviews <ExternalLink size={15}/></a></div></div>
         <div className="review-cards">{reviewConfig.reviews.map((r, i)=><article className="review-card" key={r.id}><div className="review-card-top"><span className="review-google">Google <span>G</span></span><Quote size={21}/></div><div className="stars">{[1,2,3,4,5].map(n=><Star key={n} size={15} fill={n<=r.rating?'currentColor':'none'} strokeWidth={1.5}/>)}</div><p className="review-text">{r.text}</p><div className="review-author"><span className="review-avatar">{i+1}</span><span><b>{r.name}</b><small>{r.date || 'Verified review details to be added'}</small></span></div></article>)}</div>
         <div className="reviews-bottom"><p>Read the full listing for customer feedback and the latest business information.</p><a className="text-link" href={BUSINESS.googleReviewsUrl} target="_blank" rel="noreferrer">Read all Google reviews <ArrowRight size={17}/></a><a className="text-link" href={BUSINESS.writeReviewUrl} target="_blank" rel="noreferrer">Write a Google review <ExternalLink size={15}/></a></div>
-        <p className="review-warning">Before publishing: replace the three clearly marked review placeholders in <code>src/config/reviews.ts</code> with genuine customer review text and names. Do not publish placeholder testimonials as real reviews.</p>
+        <p className="review-warning">Review excerpts are transcribed from the customer review screenshot supplied for this website. Select “Read all Google reviews” to view the business listing and additional feedback.</p>
       </div></section>
 
       <section className="contact-section section-pad" id="contact"><div className="wrap contact-grid"><div className="contact-copy"><div className="eyebrow eyebrow-light"><span className="eyebrow-line"/> LET'S BUILD SOMETHING</div><h2>Have a project<br/>in <em>mind?</em></h2><p>Tell us a little about what you are planning. Start a conversation with HINDTECH CONSTRUCTIONS.</p><button className="button button-green" onClick={() => openEnquiry()}>Send a project enquiry <ArrowRight size={17}/></button><div className="contact-details"><div><MapPin size={19}/><span><small>VISIT / LOCATION</small>{BUSINESS.address}</span></div><div><Phone size={19}/><span><small>PHONE</small>{BUSINESS.phoneDisplay}</span></div><div><Clock3 size={19}/><span><small>BUSINESS HOURS</small>Daily until 9 PM · Please confirm before visiting</span></div></div></div><div className="map-wrap"><iframe title="Map showing HINDTECH CONSTRUCTIONS in Nellore" src={BUSINESS.mapEmbed} loading="lazy" referrerPolicy="no-referrer-when-downgrade" /><a className="map-link" href={BUSINESS.mapDirections} target="_blank" rel="noreferrer">Get directions <ArrowUpRightIcon/></a></div></div></section>
@@ -133,12 +151,12 @@ export default function App() {
 
     <footer className="footer"><div className="wrap"><div className="footer-main"><div className="footer-brand"><img src="/images/hindtech-logo.png" alt="HINDTECH CONSTRUCTIONS"/><p>Building strong foundations. Creating lasting value.</p></div><div><h4>EXPLORE</h4><a href="#about">About</a><a href="#services">Services</a><a href="#projects">Projects</a><a href="#reviews">Reviews</a></div><div><h4>GET IN TOUCH</h4><span>{BUSINESS.phoneDisplay}</span><span>Nellore, Andhra Pradesh</span><button onClick={() => openEnquiry()}>Request a quote <ArrowRight size={15}/></button></div></div><div className="footer-bottom"><span>© {new Date().getFullYear()} HINDTECH CONSTRUCTIONS. All rights reserved.</span><span className="agency-credit">Designed & Developed by <a href="https://mainnovextechnologies.lovable.app/" target="_blank" rel="noreferrer">MA Innovex Technologies</a> <img src="/images/ma-innovex-logo.png" alt="MA Innovex Technologies logo"/></span></div></div></footer>
 
-    <div className="floating-actions"><button className="float-whatsapp" onClick={contactAction} aria-label="WhatsApp contact"><MessageCircle size={22}/></button><button className="float-call" onClick={contactAction} aria-label="Call HINDTECH CONSTRUCTIONS"><Phone size={21}/></button></div>
+    <div className="floating-actions"><button className="float-whatsapp" onClick={contactAction} aria-label="WhatsApp contact"><MessageCircle size={22}/></button><button className="float-call" onClick={callAction} aria-label="Call HINDTECH CONSTRUCTIONS"><Phone size={21}/></button></div>
 
     {modal && <div className="modal-backdrop" role="presentation" onMouseDown={e => {if(e.target===e.currentTarget)setModal(null)}}><section className="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title"><button className="modal-close" onClick={() => setModal(null)} aria-label="Close dialog"><X/></button>
       {modal === 'contact' ? <><span className="modal-icon"><MessageCircle/></span><div className="eyebrow">WE APPRECIATE YOUR INTEREST</div><h2 id="modal-title">Thanks for reaching out.</h2><p>This is a website demonstration prepared by MA Innovex Technologies. Direct calling and WhatsApp messaging will be activated after the website is approved and officially launched.</p><p>You can preview your project enquiry below to continue the process.</p><button className="button button-green full-width" onClick={() => openEnquiry()}>Submit project enquiry <ArrowRight size={16}/></button><button className="modal-secondary" onClick={() => setModal(null)}>Close</button></> :
-      submitted ? <><span className="modal-icon success"><Check/></span><h2 id="modal-title">Enquiry preview ready</h2><p>This demo has validated your details locally. No enquiry has been sent or stored on a server.</p><div className="submission-preview"><b>{form.name}</b><span>{form.service || intent}</span><span>{form.location}</span><span>{form.phone}</span>{form.details && <p>{form.details}</p>}</div><button className="button button-green full-width" onClick={() => {setSubmitted(false);setModal(null)}}>Done <Check size={16}/></button></> :
-      <><div className="eyebrow">PROJECT ENQUIRY / DEMO</div><h2 id="modal-title">Tell us what you’re planning.</h2><p className="modal-intro">Fields marked * are required. This demo will show a local preview only.</p><form className="enquiry-form" onSubmit={submitForm} noValidate>
+      submitted ? <><span className="modal-icon success"><Check/></span><h2 id="modal-title">Enquiry preview ready</h2><p>Your details were prepared for WhatsApp. If a new WhatsApp tab did not open, use the contact button to message the company directly.</p><div className="submission-preview"><b>{form.name}</b><span>{form.service || intent}</span><span>{form.location}</span><span>{form.phone}</span>{form.details && <p>{form.details}</p>}</div><button className="button button-green full-width" onClick={() => {setSubmitted(false);setModal(null)}}>Done <Check size={16}/></button></> :
+      <><div className="eyebrow">PROJECT ENQUIRY</div><h2 id="modal-title">Tell us what you’re planning.</h2><p className="modal-intro">Complete the details and continue securely in WhatsApp to send your enquiry.</p><form className="enquiry-form" onSubmit={submitForm} noValidate>
         <label>Full name *<input value={form.name} onChange={e=>setForm({...form,name:e.target.value})} placeholder="Your name" autoComplete="name"/></label>
         <label>Mobile number *<input value={form.phone} onChange={e=>setForm({...form,phone:e.target.value})} placeholder="10-digit mobile number" inputMode="tel" autoComplete="tel"/></label>
         <label>Email address<input value={form.email} onChange={e=>setForm({...form,email:e.target.value})} placeholder="you@example.com" type="email" autoComplete="email"/></label>
@@ -147,8 +165,8 @@ export default function App() {
         <label className="span-two">Project requirements<textarea value={form.details} onChange={e=>setForm({...form,details:e.target.value})} placeholder="Briefly describe your project..." rows={3}/></label>
         <label className="consent span-two"><input type="checkbox" checked={form.consent} onChange={e=>setForm({...form,consent:e.target.checked})}/> I agree to be contacted about this project enquiry.</label>
         {formError && <p className="form-error span-two">{formError}</p>}
-        <button className="button button-green full-width span-two" type="submit">Preview enquiry <Send size={16}/></button>
-      </form><p className="demo-disclaimer">DEMO MODE · Nothing is transmitted to the company.</p></>}
+        <button className="button button-green full-width span-two" type="submit">Continue to WhatsApp <Send size={16}/></button>
+      </form><p className="demo-disclaimer">Your enquiry opens in WhatsApp. Review the message and press Send there.</p></>}
     </section></div>}
 
     {selectedImage && <div className="lightbox" role="dialog" aria-modal="true" aria-label="Expanded gallery image" onClick={() => setSelectedImage(null)}><button onClick={() => setSelectedImage(null)} aria-label="Close image"><X/></button><img src={selectedImage} alt="Expanded construction work photograph" onClick={e=>e.stopPropagation()}/></div>}

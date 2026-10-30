@@ -9,5 +9,5 @@ export const BUSINESS = {
   googleReviewsUrl: 'https://www.google.com/maps/search/?api=1&query=HINDTECH%20CONSTRUCTIONS%2C%20Nellore%2C%20Andhra%20Pradesh',
   writeReviewUrl: 'https://www.google.com/maps/search/?api=1&query=HINDTECH%20CONSTRUCTIONS%2C%20Nellore%2C%20Andhra%20Pradesh',
 }
-export const DEMO_MODE = true
+export const DEMO_MODE = false
 export const SITE_URL = 'https://REPLACE-WITH-YOUR-PRODUCTION-DOMAIN.com' 
