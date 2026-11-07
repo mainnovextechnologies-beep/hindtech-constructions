@@ -20,7 +20,7 @@ All supplied work photos are included once in `public/images/`:
 Replace an image using the same filename to update it without changing the gallery code. `work005.png` is a supplied exterior design reference and is labelled as inspiration, not as a completed project.
 
 ## Logos
-- `public/images/hindtech-logo.png` — latest blue/cyan HINDTECH CONSTRUCTIONS logo supplied on 30 October 2026.
+- `public/images/hindtech-logo.jpeg` — latest blue/cyan HINDTECH CONSTRUCTIONS logo supplied on 30 October 2026.
 - `public/images/ma-innovex-logo.png` — MA Innovex Technologies footer credit.
 
 ## Reviews
